@@ -1,4 +1,4 @@
-exports.users = [
+exports.user = [
   {
     username: "lisamansson",
     password: "123456",
