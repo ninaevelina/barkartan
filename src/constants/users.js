@@ -1,5 +1,9 @@
 exports.userRoles = {
   USER: "USER",
-  BAR_ADMIN: "BAR_ADMIN",
-  SITE_ADMIN: "SITE_ADMIN",
+  ADMIN: "ADMIN",
+};
+
+exports.listRoles = {
+  owner: "owner",
+  guest: "guest",
 };

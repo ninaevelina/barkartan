@@ -78,14 +78,14 @@ const seedBarDb = async () => {
 
     //Users//
     await sequelize.query(
-      `INSERT INTO user (username, password,email) VALUES
-      ('lisamansson','12345',"lisa@mi.se"),
-      ('juliac','password123',"juliac@mi.se"),
-      ('ninak', 'password9505',"ninak@mi.se"),
-      ('majanilsson','maja7523', 'majanilsson@gmail.com'),
-      ('daneiadamsson','daniel1234','danielrr94@gmail.com'),
-      ('kallep', 'kalle9403', 'kallelindroos@gmail.com'),
-      ('linuseriksson', 'Testpassword23', 'linus.e92@gmail.com');
+      `INSERT INTO user (username, password,email,role) VALUES
+      ('lisamansson','12345',"lisa@mi.se", "ADMIN"),
+      ('juliac','password123',"juliac@mi.se", "USER"),
+      ('ninak', 'password9505',"ninak@mi.se","USER"),
+      ('majanilsson','maja7523', 'majanilsson@gmail.com', "USER"),
+      ('daneiadamsson','daniel1234','danielrr94@gmail.com', "USER"),
+      ('kallep', 'kalle9403', 'kallelindroos@gmail.com', "USER"),
+      ('linuseriksson', 'Testpassword23', 'linus.e92@gmail.com', "USER");
       `
     );
 
