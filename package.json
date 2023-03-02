@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seedDb": "node ./src/database/seedDb.js"
+    "dev": "nodemon ./src/app.js",
+    "seedDb": "node ./src/database/seedDb.js",
+    "barController": "node ./src/controllers/barController.js",
+    "reviewController": "node ./src/controllers/reviewController,js",
+    "userController": "node ./src/controllers/userController.js"
   },
   "keywords": [],
   "author": "",
