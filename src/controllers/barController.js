@@ -21,10 +21,45 @@ exports.getAllBars = async (req, res) => {
 };
 
 //get bar by id
-exports.getBarById = async (req, res) => {};
+exports.getBarById = async (req, res) => {
+  const barId = req.params.id;
+  const [results, metadata] = await sequelize.query(
+    `SELECT * FROM bar WHERE id = $barId`,
+    {
+      bind: { barId: barId },
+    }
+  );
+
+  if (!results || results.length == 0) {
+    throw new NotFoundError("We could not find the bar you are looking for");
+  }
+
+  console.log(results);
+
+  return res.json(results);
+};
 
 //get bar by city_id
-exports.getBarByCityId = async (req, res) => {};
+// exports.getBarByCityId = async (req, res) => {
+//   const cityId = req.params.city_id_fk;
+
+//   const [results, metadata] = await sequelize.query(
+//     `SELECT * FROM bar WHERE city_id_fk = $cityId`,
+//     {
+//       bind: { cityId: cityId },
+//     }
+//   );
+
+//   if (!results || results.length == 0) {
+//     throw new NotFoundError(
+//       "We could not find the bar in the city you are looking for"
+//     );
+//   }
+
+//   console.log(results);
+
+//   return res.json(results);
+// };
 
 //create new bar
 exports.createNewBar = async (req, res) => {};

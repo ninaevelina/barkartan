@@ -5,7 +5,7 @@ exports.bar = [
     description:
       "Perfekt ställe för en aw med Norrlands guld och en pommestallrik efter skolan.",
     city: 1,
-    phone: 08 - 252160,
+    phone: 08 + "-" + 252160,
     website: "kullensbar.gastrogate.com",
     hours: "Sön-Torsdag 13-23 Fredag-Lördag 13-00",
   },
@@ -15,7 +15,7 @@ exports.bar = [
     description:
       "Oavsett om du letar efter något bekant eller något nytt så har vi allt för dig. Välkommen till Kloster, mer än bara en Pub.",
     city: 1,
-    phone: 08 - 6692306,
+    phone: 086692306,
     website: "pubkloster.se",
     hours:
       " Måndag 13:00 till 01:00, Tisdag 13:00 till 01:00, Onsdag 13:00 till 03:00, Torsdag 13:00 till 03:00, Fredag 13:00 till 03:00, Lördag 11:00 till 03:00, Söndag 11:00 till 01:00",
@@ -26,7 +26,7 @@ exports.bar = [
     description:
       "Dovas är en mötesplats för alla! Gillar ni härlig stämning, fest och överdrivet BRA PRISER så",
     city: 1,
-    phone: 08 - 429210,
+    phone: 08429210,
     website: "",
     hours: "Vardagar 13:00 - 01:00, Helger 11:00 - 01:00",
   },
@@ -76,7 +76,7 @@ exports.bar = [
     description:
       "Vill du ha en paus från illamåendet från karusellerna och istället bli illamående av att supa? Då är du välkommen in till oss.",
     city: 3,
-    phone: 031 - 400100,
+    phone: 031400100,
     website: "liseberg.se",
     hours: "Se hemsida för öppettider",
   },
@@ -86,7 +86,7 @@ exports.bar = [
     description:
       "Om du är rik och vill vara i en avslappnande miljö tillsammans med andra rika människor så är det här ett perfekt ställe.",
     city: 2,
-    phone: 021 - 4759900,
+    phone: 021 + "-" + 4759900,
     website: "steamhotel.se",
     hours: "Måndag-Söndag 15-01",
   },
@@ -96,7 +96,7 @@ exports.bar = [
     description:
       "Hjärtat är en plats där man äter gott, dricker gott och har det gott! Ägarna Niclaes och Christian förädlar och utvecklar Hjärtat med varsam hand. Alltid bästa maten, bästa drinkarna och bästa musiken!",
     city: 1,
-    phone: 08 - 6401462,
+    phone: 086401462,
     website: "sodershjarta.se",
     hours: "Måndag-Fredag 11-01 Lördag-Söndag 16-01",
   },
