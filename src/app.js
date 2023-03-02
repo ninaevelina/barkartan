@@ -4,7 +4,6 @@ const express = require("express");
 const apiRoutes = require("./routes");
 const { errorMiddleware } = require("./middleware/errorMiddleware");
 const { notFoundMiddleware } = require("./middleware/notFoundMiddleware");
-
 const { sequelize } = require("./database/config");
 
 /* ----------- Create our Expres app ------------ */
@@ -40,11 +39,12 @@ const run = async () => {
     await sequelize.authenticate();
 
     app.listen(port, () => {
-      console.log(
-        `Server is listening on ${
-          process.env.NODE_ENV === "development" ? "http://localhost:" : "port "
-        }${port}`
-      );
+      console.log(`Server running on http://localhost:${port}`);
+      // console.log(
+      //   `Server is listening on ${
+      //     process.env.NODE_ENV === "development" ? "http://localhost:" : "port "
+      //   }${port}`
+      // );
     });
   } catch (error) {
     console.error(error);
