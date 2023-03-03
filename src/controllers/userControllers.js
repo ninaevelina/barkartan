@@ -3,15 +3,9 @@ const { NotFoundError, UnauthorizedError } = require("../utils/errors");
 const { sequelize } = require("../database/config");
 const { QueryTypes } = require("sequelize");
 
-
-exports.createUser = async (req, res) => {
-
-
-}
-
 exports.getAllUsers = async (req, res) => {
   // prettier-ignore
-  const [users, metadata] = await sequelize.query('SELECT id, username FROM users')
+  const [users, metadata] = await sequelize.query('SELECT id, username FROM user')
   return res.json(users);
 };
 
@@ -21,7 +15,7 @@ exports.getUserById = async (req, res) => {
 
   // Get the user from the database (NOTE: excluding password)
   const [user, metadata] = await sequelize.query(
-    "SELECT id, username, email FROM users WHERE id = $userId",
+    "SELECT id, username, email FROM user WHERE id = $userId",
     {
       bind: { userId },
       type: QueryTypes.SELECT,
@@ -46,7 +40,7 @@ exports.deleteUserById = async (req, res) => {
 
   // Delete the user from the database
   const [results, metadata] = await sequelize.query(
-    "DELETE FROM users WHERE id = $userId RETURNING *",
+    "DELETE FROM user WHERE id = $userId RETURNING *",
     {
       bind: { userId },
     }

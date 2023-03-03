@@ -15,14 +15,14 @@ exports.register = async (req, res) => {
 
   // Check if there are users in the database
   const [results, metadata] = await sequelize.query(
-    "SELECT id FROM users LIMIT 1"
+    "SELECT id FROM user LIMIT 1"
   );
 
   // Add user to database (make admin if first user)
   if (!results || results.length < 1) {
     // prettier-ignore
     await sequelize.query(
-			'INSERT INTO users (username, email, password, role) VALUES ($username, $email, $password, "admin")', 
+			'INSERT INTO user (username, email, password, role) VALUES ($username, $email, $password, "admin")', 
 			{
 				bind: {
 					password: hashedpassword,
@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
   } else {
     // prettier-ignore
     await sequelize.query(
-			'INSERT INTO users (username, email, password) VALUES ($username, $email, $password)', 
+			'INSERT INTO user (username, email, password) VALUES ($username, $email, $password)', 
 			{
 				bind: {
 					password: hashedpassword,
@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
   // Check if user with that email exits in db
   // prettier-ignore
   const [user, metadata] = await sequelize.query(
-		'SELECT * FROM users WHERE email = $email LIMIT 1;', {
+		'SELECT * FROM user WHERE email = $email LIMIT 1;', {
 		bind: { email },
 		type: QueryTypes.SELECT
 	})
