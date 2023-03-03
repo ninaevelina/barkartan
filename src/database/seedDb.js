@@ -39,7 +39,7 @@ const seedBarDb = async () => {
               username TEXT,
               password TEXT,
               email TEXT,
-              role TEXT DEFAULT "user"
+              role TEXT DEFAULT "USER"
             );
     `);
 

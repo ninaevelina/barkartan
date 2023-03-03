@@ -74,7 +74,7 @@ exports.login = async (req, res) => {
   const jwtPayload = {
     userId: user.id,
     email: user.email,
-    role: user["is_admin"] === 1 ? userRoles.ADMIN : userRoles.USER
+    role: user["admin"] === 1 ? userRoles.ADMIN : userRoles.USER
   };
 
   const jwtToken = jwt.sign(jwtPayload, process.env.JWT_SECRET, {
