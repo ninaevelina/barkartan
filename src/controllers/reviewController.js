@@ -34,10 +34,56 @@ exports.getReviewById = async (req, res) => {
   return res.json(results);
 };
 
-// delete review
+// delete review by id
 
-exports.deleteReview = async (req, res) => {};
+exports.deleteReview = async (req, res) => {
+  const reviewId = req.params.id;
+  const [review, metadata] = await sequelize.query(
+    `
+  
+  SELECT * FROM review r
+  WHERE id = $reviewId`,
+
+    {
+      bind: { reviewId: reviewId },
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  if (!review) {
+    throw new NotFoundError("Review not found");
+  }
+
+  //admin+userid auth
+
+  if (req.user.id == review.user_id_fk || req.user.role == userRoles.ADMIN) {
+    await sequelize.query(
+      `
+    DELETE FROM review r
+    WHERE id = $reviewId`,
+      {
+        bind: {
+          reviewId: reviewId,
+        },
+        type: QueryTypes.DELETE,
+      }
+    );
+    return res.sendStatus(204);
+  } else {
+    throw new UnauthorizedError("No permission to delete this review");
+  }
+};
 
 // create review
+
+exports.createReview = async (req, res) => {
+  const userId = req.user.id;
+  const barId = req.params.id;
+  const { review_text, rating } = req.body;
+
+  // var + await s.query
+  //bind + type, qtype
+  // return res w. header+status
+};
 
 // get all reviews by bar_id
