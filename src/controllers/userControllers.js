@@ -3,6 +3,12 @@ const { NotFoundError, UnauthorizedError } = require("../utils/errors");
 const { sequelize } = require("../database/config");
 const { QueryTypes } = require("sequelize");
 
+
+exports.createUser = async (req, res) => {
+
+
+}
+
 exports.getAllUsers = async (req, res) => {
   // prettier-ignore
   const [users, metadata] = await sequelize.query('SELECT id, username FROM users')
