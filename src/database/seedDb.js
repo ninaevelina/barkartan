@@ -50,7 +50,9 @@ const seedBarDb = async () => {
         review_text TEXT NOT NULL,
         bar_id_fk INTEGER NOT NULL,
         user_id_fk INTEGER NOT NULL,
-        rating INTEGER
+        rating INTEGER,
+        FOREIGN KEY(bar_id_fk) REFERENCES bar(id),
+        FOREIGN KEY(user_id_fk) REFERENCES user(id)
        );
     `);
 
