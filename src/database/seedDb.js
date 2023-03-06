@@ -5,10 +5,11 @@ sequelize.query("PRAGMA foreign_keys = ON", { raw: true });
 
 const seedBarDb = async () => {
   try {
+    await sequelize.query(`DROP TABLE IF EXISTS review;`);
     await sequelize.query(`DROP TABLE IF EXISTS bar;`);
     await sequelize.query(`DROP TABLE IF EXISTS city;`);
     await sequelize.query(`DROP TABLE IF EXISTS user;`);
-    await sequelize.query(`DROP TABLE IF EXISTS review;`);
+    //await sequelize.query(`DROP TABLE IF EXISTS review;`);
 
     // Create bars table
     await sequelize.query(`
@@ -21,7 +22,7 @@ const seedBarDb = async () => {
             phone TEXT,
             website TEXT,
             hours TEXT,
-            FOREIGN KEY (city_id_fk) REFERENCES city(id)
+            FOREIGN KEY(city_id_fk) REFERENCES city(id)
         );
     `);
 

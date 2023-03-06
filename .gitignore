@@ -1,4 +1,5 @@
 .env
 node_modules
-barsDb
+*.sqlite3
+*.sqlite
 
