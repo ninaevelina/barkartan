@@ -81,9 +81,28 @@ exports.createReview = async (req, res) => {
   const barId = req.params.id;
   const { review_text, rating } = req.body;
 
-  // var + await s.query
-  //bind + type, qtype
-  // return res w. header+status
+  const [newReviewId] = await sequelize.query(
+    `
+    INSERT INTO review (review_text, bar_id_fk, user_id_fk, rating)
+    VALUES ($review_text, $bar_id_fk, $user_id_fk, $rating);
+    `,
+    {
+      bind: {
+        review_text: review_text,
+        bar_id_fk: barId,
+        user_id_fk: userId,
+        rating: rating,
+      },
+      type: QueryTypes.INSERT,
+    }
+  );
+
+  return res
+    .setHeader(
+      "Location",
+      `${req.protocol}://${req.headers.host}/api/v1/review/$newReviewId.reviewId}`
+    )
+    .sendStatus(201);
 };
 
 // get all reviews by bar_id
