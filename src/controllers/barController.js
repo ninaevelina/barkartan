@@ -39,30 +39,95 @@ exports.getBarById = async (req, res) => {
   return res.json(results);
 };
 
-//get bar by city_id
-// exports.getBarByCityId = async (req, res) => {
-//   const cityId = req.params.city_id_fk;
+/***************** get bar by city_id ********************/
 
-//   const [results, metadata] = await sequelize.query(
-//     `SELECT * FROM bar WHERE city_id_fk = $cityId`,
-//     {
-//       bind: { cityId: cityId },
-//     }
-//   );
+exports.getBarByCityId = async (req, res) => {
+  // const cityId = req.params.city_id_fk;
+  const cityId = req.body.city_id_fk;
 
-//   if (!results || results.length == 0) {
-//     throw new NotFoundError(
-//       "We could not find the bar in the city you are looking for"
-//     );
-//   }
+  const [results, metadata] = await sequelize.query(
+    `SELECT * FROM bar WHERE city_id_fk = $cityId`,
+    {
+      bind: { cityId: cityId },
+    }
+  );
 
-//   console.log(results);
+  if (!results || results.length == 0) {
+    throw new NotFoundError(
+      "We could not find the bar in the city you are looking for"
+    );
+  }
 
-//   return res.json(results);
-// };
+  console.log(results);
 
-//create new bar
-exports.createNewBar = async (req, res) => {};
+  return res.json(results);
+};
+
+/************ create new bar **************/
+exports.createNewBar = async (req, res) => {
+  const { name, address, description, city_id_fk, phone, website, hours } =
+    req.body;
+
+  await sequelize.query(
+    "INSERT INTO bar (name,address,description, city_id_fk, phone, website, hours) VALUES ($name, $address, $description, $city_id_fk, $phone, $website, $hours)",
+    {
+      bind: {
+        name: name,
+        address: address,
+        description: description,
+        city_id_fk: city_id_fk,
+        phone: phone,
+        website: website,
+        hours: hours,
+      },
+    }
+  );
+
+  // Request response
+  return res.status(201).json({
+    message: "Registration succeeded.",
+  });
+};
 
 //delete bar
-exports.deleteBarById = async (req, res) => {};
+exports.deleteBarById = async (req, res) => {
+  const barId = req.params.id;
+  const [results, metadata] = await sequelize.query(
+    `SELECT * FROM bar WHERE id = $barId`,
+    {
+      bind: { barId: barId },
+    }
+  );
+
+  if (!results || results.length == 0) {
+    throw new NotFoundError("We could not find the bar you are looking for");
+  }
+  //admin+userid auth
+
+  // if (req.user.id == bar.user_id_fk || req.user.role == userRoles.ADMIN) {
+  //   await sequelize.query(
+  //     `
+  //   DELETE FROM bar WHERE id = $barId`,
+  //     {
+  //       bind: {
+  //         barId: barId,
+  //       },
+  //       type: QueryTypes.DELETE,
+  //     }
+  //   );
+  //   return res.sendStatus(204);
+  // } else {
+  //   throw new UnauthorizedError("No permission to delete this bar");
+  // }
+  await sequelize.query(
+    `
+  DELETE FROM bar WHERE id = $barId`,
+    {
+      bind: {
+        barId: barId,
+      },
+      type: QueryTypes.DELETE,
+    }
+  );
+  return res.sendStatus(204);
+};

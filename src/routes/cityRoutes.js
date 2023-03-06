@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { getBarByCityId } = require("../controllers/cityController");
+const { getBarByCityId, addNewCity } = require("../controllers/cityController");
 
-router.get("/", getBarByCityId);
+router.get("/:id", getBarByCityId);
+router.post("/", addNewCity);
 
 module.exports = router;

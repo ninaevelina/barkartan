@@ -3,13 +3,13 @@ const router = express.Router();
 const {
   getAllBars,
   getBarById,
-  getBarByCityId,
   createNewBar,
   deleteBarById,
 } = require("../controllers/barController");
 
 router.get("/", getAllBars);
 router.get("/:id", getBarById);
-//router.get("")
+router.post("/", createNewBar);
+router.delete("/:id", deleteBarById);
 
 module.exports = router;

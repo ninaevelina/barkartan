@@ -12,6 +12,12 @@ const {
 } = require("../middleware/authenticationMiddleware");
 
 router.get("/", isAuthenticated, authorizeRoles(userRoles.ADMIN), getAllUsers);
-router.get("/:userId", isAuthenticated, getUserById);
+router.get("/:id", isAuthenticated, getUserById);
+router.delete(
+  "/:id",
+  isAuthenticated,
+  authorizeRoles(userRoles.ADMIN),
+  deleteUserById
+);
 
 module.exports = router;

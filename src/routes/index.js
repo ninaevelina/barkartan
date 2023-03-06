@@ -5,14 +5,12 @@ const authRoutes = require("./authRoutes");
 const barRoutes = require("./barRoutes");
 const cityRoutes = require("./cityRoutes");
 const reviewRoutes = require("./reviewRoutes");
-//const reviewRoutes = require("./reviewRoutes");
-//const userRoutes = require("./userRoutes");
+const userRoutes = require("./userRoutes");
 
 router.use("/auth", authRoutes);
 router.use("/bar", barRoutes);
 router.use("/city", cityRoutes);
 router.use("/review", reviewRoutes);
-//router.use("/review", reviewRoutes);
-//router.use("/user", userRoutes);
+router.use("/user", userRoutes);
 
 module.exports = router;
