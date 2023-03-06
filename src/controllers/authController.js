@@ -7,7 +7,7 @@ const { userRoles } = require("../constants/users");
 
 exports.register = async (req, res) => {
   // Place desired username, email and password into local variables
-  const { username,password, email } = req.body;
+  const { username, password, email } = req.body;
 
   // Encrypt the desired password
   const salt = await bcrypt.genSalt(10);
@@ -56,10 +56,12 @@ exports.login = async (req, res) => {
   const { email, password: canditatePassword } = req.body;
 
   const [user, metadata] = await sequelize.query(
-		'SELECT * FROM user WHERE email = $email LIMIT 1;', {
-		bind: { email },
-		type: QueryTypes.SELECT
-	})
+    "SELECT * FROM user WHERE email = $email LIMIT 1;",
+    {
+      bind: { email },
+      type: QueryTypes.SELECT,
+    }
+  );
 
   console.log(user);
 
@@ -74,7 +76,7 @@ exports.login = async (req, res) => {
   const jwtPayload = {
     userId: user.id,
     email: user.email,
-    role: user["admin"] === 1 ? userRoles.ADMIN : userRoles.USER
+    role: user["admin"] === 1 ? userRoles.ADMIN : userRoles.USER,
   };
 
   const jwtToken = jwt.sign(jwtPayload, process.env.JWT_SECRET, {
