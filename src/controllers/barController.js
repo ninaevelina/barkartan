@@ -39,43 +39,23 @@ exports.getBarById = async (req, res) => {
   return res.json(results);
 };
 
-/***************** get bar by city_id ********************/
-
-exports.getBarByCityId = async (req, res) => {
-  // const cityId = req.params.city_id_fk;
-  const cityId = req.body.city_id_fk;
-
-  const [results, metadata] = await sequelize.query(
-    `SELECT * FROM bar WHERE city_id_fk = $cityId`,
-    {
-      bind: { cityId: cityId },
-    }
-  );
-
-  if (!results || results.length == 0) {
-    throw new NotFoundError(
-      "We could not find the bar in the city you are looking for"
-    );
-  }
-
-  console.log(results);
-
-  return res.json(results);
-};
-
 /************ create new bar **************/
 exports.createNewBar = async (req, res) => {
-  const { name, address, description, city_id_fk, phone, website, hours } =
+  const { name, address, description, cityId, phone, website, hours } =
     req.body;
+  const userId = req.user.id;
 
-  await sequelize.query(
-    "INSERT INTO bar (name,address,description, city_id_fk, phone, website, hours) VALUES ($name, $address, $description, $city_id_fk, $phone, $website, $hours)",
+  // const user_id_fk = req.user.id;
+
+  const [newBarID] = await sequelize.query(
+    "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $userId, $address, $description, $cityId, $phone, $website, $hours)",
     {
       bind: {
         name: name,
+        userId: userId,
         address: address,
         description: description,
-        city_id_fk: city_id_fk,
+        cityId: cityId,
         phone: phone,
         website: website,
         hours: hours,
@@ -84,9 +64,15 @@ exports.createNewBar = async (req, res) => {
   );
 
   // Request response
-  return res.status(201).json({
-    message: "Registration succeeded.",
-  });
+  return res
+    .setHeader(
+      "Location",
+      `${req.protocol}://${req.headers.host}/api/v1/bar/$newBarId.barId}`
+    )
+    .status(201)
+    .json({
+      message: "Registration succeeded.",
+    });
 };
 
 //delete bar
@@ -104,30 +90,19 @@ exports.deleteBarById = async (req, res) => {
   }
   //admin+userid auth
 
-  // if (req.user.id == bar.user_id_fk || req.user.role == userRoles.ADMIN) {
-  //   await sequelize.query(
-  //     `
-  //   DELETE FROM bar WHERE id = $barId`,
-  //     {
-  //       bind: {
-  //         barId: barId,
-  //       },
-  //       type: QueryTypes.DELETE,
-  //     }
-  //   );
-  //   return res.sendStatus(204);
-  // } else {
-  //   throw new UnauthorizedError("No permission to delete this bar");
-  // }
-  await sequelize.query(
-    `
-  DELETE FROM bar WHERE id = $barId`,
-    {
-      bind: {
-        barId: barId,
-      },
-      type: QueryTypes.DELETE,
-    }
-  );
-  return res.sendStatus(204);
+  if (req.user.id == bars.user_id_fk || req.user.role == userRoles.ADMIN) {
+    await sequelize.query(
+      `
+    DELETE FROM bar WHERE id = $barId`,
+      {
+        bind: {
+          barId: barId,
+        },
+        type: QueryTypes.DELETE,
+      }
+    );
+    return res.sendStatus(204);
+  } else {
+    throw new UnauthorizedError("No permission to delete this bar");
+  }
 };

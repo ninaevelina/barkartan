@@ -6,10 +6,11 @@ const {
   createNewBar,
   deleteBarById,
 } = require("../controllers/barController");
+const { isAuthenticated } = require("../middleware/authenticationMiddleware");
 
 router.get("/", getAllBars);
 router.get("/:id", getBarById);
-router.post("/", createNewBar);
-router.delete("/:id", deleteBarById);
+router.post("/", isAuthenticated, createNewBar);
+router.delete("/:id", isAuthenticated, deleteBarById);
 
 module.exports = router;

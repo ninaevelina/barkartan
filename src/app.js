@@ -17,6 +17,15 @@ const app = express();
 /* ----------------- Middleware ----------------- */
 /* ---------------------------------------------- */
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(`Processing ${req.method} request to ${req.path}`);
+  next();
+});
+/* ---------------------------------------------- */
+/* ------------ Secutiry Middleware ------------- */
+/* ---------------------------------------------- */
+
 app.use(helmet());
 app.use(xss());
 app.use(
@@ -32,11 +41,6 @@ app.use(
     max: 50,
   })
 );
-
-app.use((req, res, next) => {
-  console.log(`Processing ${req.method} request to ${req.path}`);
-  next();
-});
 
 /* ---------------------------------------------- */
 /* ------------------- Routes ------------------- */
