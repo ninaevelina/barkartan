@@ -42,7 +42,7 @@ const seedBarDb = async () => {
               username TEXT,
               password TEXT,
               email TEXT,
-              role TEXT DEFAULT "USER"
+              is_admin BOOLEAN NOT NULL DEFAULT 0
             );
     `);
 
@@ -65,6 +65,19 @@ const seedBarDb = async () => {
       ('Stockholm'), ('Västerås'), ('Göteborg');`
     );
 
+    //Users//
+    await sequelize.query(
+      `INSERT INTO user (username, password,email,is_admin) VALUES
+      ('lisamansson','12345',"lisa@mi.se", 1),
+      ('juliac','password123',"juliac@mi.se", 0),
+      ('ninak', 'password9505',"ninak@mi.se",0),
+      ('majanilsson','maja7523', 'majanilsson@gmail.com', 0),
+      ('daneiadamsson','daniel1234','danielrr94@gmail.com', 0),
+      ('kallep', 'kalle9403', 'kallelindroos@gmail.com', 0),
+      ('linuseriksson', 'Testpassword23', 'linus.e92@gmail.com', 0);
+      `
+    );
+
     //bar//
 
     await sequelize.query(
@@ -79,19 +92,6 @@ const seedBarDb = async () => {
         ('Tyrolen', 4,'Liseberg', 'Vill du ha en paus från illamåendet från karusellerna och istället bli illamående av att supa? Då är du välkommen in till oss.', 3, '031-400100', 'liseberg.se', 'Se hemsida för öppettider'),
         ('The Steam Hotel',5, 'Ångkraftsvägen 14', 'Om du är rik och vill vara i en avslappnande miljö tillsammans med andra rika människor så är det här ett perfekt ställe.', 2, '021-4759900', 'steamhotel.se', 'Måndag-Söndag 15-01'),
         ('Söders Hjärta',6, 'Bellmansgatan 22', 'Hjärtat är en plats där man äter gott, dricker gott och har det gott! Ägarna Niclaes och Christian förädlar och utvecklar Hjärtat med varsam hand. Alltid bästa maten, bästa drinkarna och bästa musiken!', 1, '08-6401462', 'sodershjarta.se', 'Måndag-Fredag 11-01 Lördag-Söndag 16-01');`
-    );
-
-    //Users//
-    await sequelize.query(
-      `INSERT INTO user (username, password,email,role) VALUES
-      ('lisamansson','12345',"lisa@mi.se", "ADMIN"),
-      ('juliac','password123',"juliac@mi.se", "USER"),
-      ('ninak', 'password9505',"ninak@mi.se","USER"),
-      ('majanilsson','maja7523', 'majanilsson@gmail.com', "USER"),
-      ('daneiadamsson','daniel1234','danielrr94@gmail.com', "USER"),
-      ('kallep', 'kalle9403', 'kallelindroos@gmail.com', "USER"),
-      ('linuseriksson', 'Testpassword23', 'linus.e92@gmail.com', "USER");
-      `
     );
 
     //Review
