@@ -13,6 +13,11 @@ const { reviewSchema } = require("../middleware/validation/validationSchemas");
 router.get("/", getAllReviews);
 router.get("/:id", getReviewById);
 router.delete("/:reviewId", isAuthenticated, deleteReview);
-router.post("/:barId", validate(reviewSchema), isAuthenticated, createReview);
+router.post(
+  "/bar/:barId/review",
+  validate(reviewSchema),
+  isAuthenticated,
+  createReview
+);
 
 module.exports = router;

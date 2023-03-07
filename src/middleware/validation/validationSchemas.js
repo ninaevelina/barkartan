@@ -37,3 +37,5 @@ exports.reviewSchema = [
       "You must enter your review rating, please provide your rating between 1 and 5"
     ),
 ];
+
+// validation for create bar??

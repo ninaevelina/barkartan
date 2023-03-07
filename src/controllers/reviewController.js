@@ -76,33 +76,37 @@ exports.deleteReview = async (req, res) => {
 
 // create review
 
+// http://localhost:3000/api/v1/bar/1/review
+
 exports.createReview = async (req, res) => {
   const userId = req.user.id;
-  const barId = req.params.id;
+  const barId = req.params.id || req.body.id; // bar-id in body obs test
   const { review_text, rating } = req.body;
 
-  const [newReviewId] = await sequelize.query(
-    `
+  if (req.user.role !== userRoles.ADMIN) {
+    const [newReviewId] = await sequelize.query(
+      `
     INSERT INTO review (review_text, bar_id_fk, user_id_fk, rating)
     VALUES ($review_text, $bar_id_fk, $user_id_fk, $rating);
     `,
-    {
-      bind: {
-        review_text: review_text,
-        bar_id_fk: barId,
-        user_id_fk: userId,
-        rating: rating,
-      },
-      type: QueryTypes.INSERT,
-    }
-  );
+      {
+        bind: {
+          review_text: review_text,
+          bar_id_fk: barId,
+          user_id_fk: userId,
+          rating: rating,
+        },
+        type: QueryTypes.INSERT,
+      }
+    );
 
-  return res
-    .setHeader(
-      "Location",
-      `${req.protocol}://${req.headers.host}/api/v1/review/$newReviewId.reviewId}`
-    )
-    .sendStatus(201);
+    return res
+      .setHeader(
+        "Location",
+        `${req.protocol}://${req.headers.host}/api/v1/bar/${barId}/review/${newReviewId.reviewId}`
+      )
+      .sendStatus(201);
+  }
 };
 
 // get all reviews by bar_id
