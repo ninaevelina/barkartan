@@ -76,6 +76,47 @@ exports.createNewBar = async (req, res) => {
     });
 };
 
+//updateBar
+
+exports.updateBarById = async (req, res) => {
+  const barId = req.params.id;
+  // const userId = req.user.id;
+
+  const [results, metadata] = await sequelize.query(
+    `SELECT * FROM bar WHERE id = $barId`,
+    {
+      bind: { barId: barId },
+    }
+  );
+  if (!results || results.length == 0) {
+    throw new NotFoundError("We could not find the bar you are looking for");
+  }
+  // if(!userId == user_id_fk)
+  if (req.user.id == bars.user_id_fk || req.user.role == userRoles.ADMIN) {
+    const { name, address, description, cityId, phone, website, hours } =
+      req.body;
+    await sequelize.query(
+      "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $user_id_fk, $address, $description, $cityId, $phone, $website, $hours)",
+      {
+        bind: {
+          name: name,
+          user_id_fk: user_id_fk,
+          address: address,
+          description: description,
+          cityId: cityId,
+          phone: phone,
+          website: website,
+          hours: hours,
+        },
+        type: QueryTypes.INSERT,
+      }
+    );
+  }
+  return res.status(201).json({
+    message: "Registration succeeded.",
+  });
+};
+
 //delete bar
 exports.deleteBarById = async (req, res) => {
   const barId = req.params.id;
@@ -89,7 +130,6 @@ exports.deleteBarById = async (req, res) => {
   if (!results || results.length == 0) {
     throw new NotFoundError("We could not find the bar you are looking for");
   }
-  //admin+userid auth
 
   if (req.user.id == bars.user_id_fk || req.user.role == userRoles.ADMIN) {
     await sequelize.query(
