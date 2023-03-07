@@ -111,6 +111,7 @@ exports.createReview = async (req, res) => {
 
 exports.createNewReview = async (req, res) => {
   const { review_text, bar_id_fk, user_id_fk, rating } = req.body;
+
   const [newReviewId] = await sequelize.query(
     `
   INSERT INTO review (review_text, bar_id_fk, user_id_fk, rating) 
