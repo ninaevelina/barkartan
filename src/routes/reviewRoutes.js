@@ -20,6 +20,6 @@ router.delete("/:reviewId", isAuthenticated, deleteReview);
   isAuthenticated,
   createReview
 );*/
-router.post("/review", isAuthenticated, createNewReview);
+router.post("/", isAuthenticated, createNewReview);
 
 module.exports = router;

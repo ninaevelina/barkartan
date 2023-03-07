@@ -43,16 +43,16 @@ exports.getBarById = async (req, res) => {
 exports.createNewBar = async (req, res) => {
   const { name, address, description, cityId, phone, website, hours } =
     req.body;
-  const userId = req.user.id;
+  // const userId = req.user.id;
 
-  // const user_id_fk = req.user.id;
+  const user_id_fk = req.user.id;
 
-  const [newBarID] = await sequelize.query(
-    "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $userId, $address, $description, $cityId, $phone, $website, $hours)",
+  const [newBarId] = await sequelize.query(
+    "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $user_id_fk, $address, $description, $cityId, $phone, $website, $hours)",
     {
       bind: {
         name: name,
-        userId: userId,
+        user_id_fk: user_id_fk,
         address: address,
         description: description,
         cityId: cityId,
@@ -60,6 +60,7 @@ exports.createNewBar = async (req, res) => {
         website: website,
         hours: hours,
       },
+      type: QueryTypes.INSERT,
     }
   );
 
@@ -67,7 +68,7 @@ exports.createNewBar = async (req, res) => {
   return res
     .setHeader(
       "Location",
-      `${req.protocol}://${req.headers.host}/api/v1/bar/$newBarId.barId}`
+      `${req.protocol}://${req.headers.host}/api/v1/bar/${newBarId.barId}`
     )
     .status(201)
     .json({
