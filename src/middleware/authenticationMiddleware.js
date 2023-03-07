@@ -28,7 +28,8 @@ exports.isAuthenticated = async (req, res, next) => {
 };
 exports.authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!req.user?.role || !roles.includes(req.user.role)) {
+    //if (!req.user?.is_admin || !roles.includes(req.user.is_admin)) {
+    if (!req.user.is_admin === 1) {
       throw new UnauthorizedError("Unauthorized Access");
     }
     next();

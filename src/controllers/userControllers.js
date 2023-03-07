@@ -6,12 +6,13 @@ const { QueryTypes } = require("sequelize");
 exports.getAllUsers = async (req, res) => {
   // prettier-ignore
   const [users, metadata] = await sequelize.query('SELECT id, username FROM user')
+  console.log(users);
   return res.json(users);
 };
 
 exports.getUserById = async (req, res) => {
   // Grab the user id and place in local variable
-  const userId = req.params.userId;
+  const userId = req.params.id;
 
   // Get the user from the database (NOTE: excluding password)
   const [user, metadata] = await sequelize.query(
@@ -31,10 +32,10 @@ exports.getUserById = async (req, res) => {
 
 exports.deleteUserById = async (req, res) => {
   // Grab the user id and place in local variable
-  const userId = req.params.userId;
+  const userId = req.params.id;
 
   // Check if user is admin || user is requesting to delete themselves
-  if (userId != req.user?.userId && req.user.is_admin !== 1) {
+  if (userId !== req.user?.id && req.user.is_admin === 0) {
     throw new UnauthorizedError("Unauthorized Access");
   }
 
@@ -55,5 +56,7 @@ exports.deleteUserById = async (req, res) => {
   });
 
   // Send back user info
-  return res.sendStatus(204);
+  return res.status(201).json({
+    message: "succesfully deleted user",
+  });
 };
