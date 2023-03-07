@@ -34,7 +34,7 @@ exports.deleteUserById = async (req, res) => {
   const userId = req.params.userId;
 
   // Check if user is admin || user is requesting to delete themselves
-  if (userId != req.user?.userId && req.user.role !== userRoles.ADMIN) {
+  if (userId != req.user?.userId && req.user.is_admin !== 1) {
     throw new UnauthorizedError("Unauthorized Access");
   }
 

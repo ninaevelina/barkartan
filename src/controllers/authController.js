@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
   if (!results || results.length < 1) {
     // prettier-ignore
     await sequelize.query(
-			'INSERT INTO user (username, email, password, role) VALUES ($username, $email, $password, "admin")', 
+			'INSERT INTO user (username, email, password, is_admin) VALUES ($username, $email, $password, 1)', 
 			{
 				bind: {
           username: username,
@@ -65,7 +65,7 @@ exports.login = async (req, res) => {
 
   console.log(user);
 
-  if (!user) throw new UnauthenticatedError("Invalid Credentials");
+  if (!user) throw new UnauthenticatedError("Please create an account");
 
   const isPasswordCorrect = await bcrypt.compare(
     canditatePassword,

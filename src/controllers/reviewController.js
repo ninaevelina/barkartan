@@ -42,7 +42,7 @@ exports.deleteReview = async (req, res) => {
     `
   
   SELECT * FROM review r
-  WHERE id = $reviewId`,
+  WHERE review.id = $reviewId`,
 
     {
       bind: { reviewId: reviewId },
@@ -60,7 +60,7 @@ exports.deleteReview = async (req, res) => {
     await sequelize.query(
       `
     DELETE FROM review r
-    WHERE id = $reviewId`,
+    WHERE review.id = $reviewId`,
       {
         bind: {
           reviewId: reviewId,
