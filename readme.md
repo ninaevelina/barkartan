@@ -22,6 +22,14 @@ I projektet har vi arbetat med databasdesign, där vi byggt ett REST API vars da
 
 Syftet med projektet är att strukturera upp användarhantering och login, hantera recensionsdata samt övrig data för våra valda företag.
 
+Byggt med:
+
+Express
+node.js
+SQLite
+
 ---
 
 ## SQLite databasdesign
+
+![databasedesign](./dbDesign/dbDesign.png)
