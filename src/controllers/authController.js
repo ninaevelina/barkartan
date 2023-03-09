@@ -26,27 +26,24 @@ exports.register = async (req, res) => {
       }
     );
   } else {
-    // prettier-ignore
     await sequelize.query(
-			'INSERT INTO user (username, email, password) VALUES ($username, $email, $password)', 
-			{
-				bind: {
+      "INSERT INTO user (username, email, password) VALUES ($username, $email, $password)",
+      {
+        bind: {
           username: username,
-					password: hashedpassword,
-					email: email,
-				},
-			}
-		)
+          password: hashedpassword,
+          email: email,
+        },
+      }
+    );
   }
 
-  // Request response
   return res.status(201).json({
     message: "Registration succeeded. Please log in.",
   });
 };
 
 exports.login = async (req, res) => {
-  // Place candidate email and password into local variables
   const { email, password: canditatePassword } = req.body;
 
   const [user, metadata] = await sequelize.query(

@@ -1,6 +1,6 @@
 const { sequelize } = require("../database/config");
-const { bars } = require("../data/bar");
-const { city } = require("../data/city");
+const { bars } = require("../data/bars");
+const { city } = require("../data/cities");
 const { NotFoundError } = require("../utils/errors");
 
 exports.getBarByCityId = async (req, res) => {

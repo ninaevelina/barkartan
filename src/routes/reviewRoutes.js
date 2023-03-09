@@ -15,7 +15,6 @@ const { reviewSchema } = require("../middleware/validation/validationSchemas");
 
 router.get("/", getAllReviews);
 router.get("/:id", getReviewById);
-router.get("/review/bar/:barId", isAuthenticated, getReviewsByBarId);
 router.delete("/:reviewId", isAuthenticated, deleteReview);
 /*router.post(
   "/bar/:barId/review",

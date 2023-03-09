@@ -1,5 +1,9 @@
 const { sequelize } = require("./config");
-const { bars } = require("../data/bar");
+const { bars } = require("../data/bars");
+const { cities } = require("../data/cities");
+const { reviews } = require("../data/reviews");
+const { users } = require("../data/users");
+const bcrypt = require("bcrypt");
 
 sequelize.query("PRAGMA foreign_keys = ON", { raw: true });
 
@@ -9,7 +13,6 @@ const seedBarDb = async () => {
     await sequelize.query(`DROP TABLE IF EXISTS bar;`);
     await sequelize.query(`DROP TABLE IF EXISTS city;`);
     await sequelize.query(`DROP TABLE IF EXISTS user;`);
-    //await sequelize.query(`DROP TABLE IF EXISTS review;`);
 
     // Create bars table
     await sequelize.query(`
@@ -48,10 +51,10 @@ const seedBarDb = async () => {
 
     // create review table
     await sequelize.query(`
-       CREATE TABLE IF NOT EXISTS review(
+       CREATE TABLE IF NOT EXISTS review (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         review_text TEXT NOT NULL,
-        bar_id_fk INTEGER NOT NULL,
+        bar_id_fk INTEGER,
         user_id_fk INTEGER,
         rating INTEGER,
         FOREIGN KEY(bar_id_fk) REFERENCES bar(id),
@@ -59,50 +62,85 @@ const seedBarDb = async () => {
        );
     `);
 
-    //City//
-    await sequelize.query(
-      `INSERT INTO city (name) VALUES 
-      ('Stockholm'), ('Västerås'), ('Göteborg');`
-    );
+    //user loop
 
-    //Users//
-    await sequelize.query(
-      `INSERT INTO user (username, password,email,is_admin) VALUES
-       ('lisamansson','12345',"lisa@mi.se", 1),
-       ('juliac','password123',"juliac@mi.se", 0),
-       ('ninak', 'password9505',"ninak@mi.se",0),
-       ('majanilsson','maja7523', 'majanilsson@gmail.com', 0),
-       ('daneiadamsson','daniel1234','danielrr94@gmail.com', 0),
-       ('kallep', 'kalle9403', 'kallelindroos@gmail.com', 0),
-       ('linuseriksson', 'Testpassword23', 'linus.e92@gmail.com', 0);
-       `
-    );
+    let userInsertQuery = `INSERT INTO user (username, password, email, is_admin) VALUES `;
 
-    //bar//
+    for (let i = 0; i < users.length; i++) {
+      let username = users[i].username;
+      let password = users[i].password;
+      let email = users[i].email;
+      let is_admin = users[i].is_admin;
 
-    await sequelize.query(
-      `INSERT INTO bar (name, user_id_fk, address, description, city_id_fk, phone, website, hours) VALUES
-         ('Kullens',3, 'Tranebergsplan 6', 'Perfekt ställe för en aw med Norrlands guld och en pommestallrik efter skolan.', 1, '08-252160', 'kullensbar.gastrogate.com', 'Sön-Torsdag 13-23 Fredag-Lördag 13-00'),
-         ('Kloster',4, 'Hornsgatan 84', 'Oavsett om du letar efter något bekant eller något nytt så har vi allt för dig. Välkommen till Kloster, mer än bara en Pub.', 1, '08-6692306', 'pubkloster.se', 'Måndag 13:00 till 01:00, Tisdag 13:00 till 01:00, Onsdag 13:00 till 03:00, Torsdag 13:00 till 03:00, Fredag 13:00 till 03:00, Lördag 11:00 till 03:00, Söndag 11:00 till 01:00'),
-         ('Dovas',7, 'Hornsgatan 90', 'Dovas är en mötesplats för alla! Gillar ni härlig stämning, fest och överdrivet BRA PRISER så', 1, '08-429210', 'dovas.se', 'Vardagar 13:00 - 01:00, Helger 11:00 - 01:00'),
-         ('Lykke Coffe Bar', 5,'Nytorgsgatan 38', 'Lykke Nytorget is the place where our wet coffee dreams become reality. From our coffee farms to your cup in an unbroken chain. It is also a place that we opened for completely egoistic reasons. Where we ourselves come to enjoy well made food, delicious baked goods, amazing cocktails and a wide selection of beer. Everything we like as well as coffee you might say.', 1, '08-429210', NULL, 'Monday - Tuesday: 8-20, Wednesday -Thursday: 8-23, Friday -Saturday: 8-00, Sunday: 8-20'),
-         ('Retro',6, 'Sveavägen 120', 'Varva ner efter jobbet på en afterwork på Retro Bar & Restaurant Odenplan.', 1, '08-6129964', 'svea.retrobar.se', 'Mån - Sön 13-01'),
-         ('O-learys', 2,'Stora Torget 2', 'Bra ställe för shuffleboard och bowling och att bli full.', 2, '021-4481630', 'olearys.se', 'Måndag-Tisdag 16-23 Onsdag 16-02 Torsdag 16-23 Fredag 16-03 Lördag 12-03 Söndag 12-22'),
-         ('Nya Hattfabriken',2, 'Slottsgatan 8', 'Perfekt om du är 50+ och vill supa gärnet.', 2, '021-136500', 'nyahattfabriken.se', 'Måndag-Torsdag 11-22:30 Fredag 11-23 Lördag 12-23 Söndag Stängt'),
-         ('Tyrolen', 4,'Liseberg', 'Vill du ha en paus från illamåendet från karusellerna och istället bli illamående av att supa? Då är du välkommen in till oss.', 3, '031-400100', 'liseberg.se', 'Se hemsida för öppettider'),
-        ('The Steam Hotel',5, 'Ångkraftsvägen 14', 'Om du är rik och vill vara i en avslappnande miljö tillsammans med andra rika människor så är det här ett perfekt ställe.', 2, '021-4759900', 'steamhotel.se', 'Måndag-Söndag 15-01'),
-        ('Söders Hjärta',6, 'Bellmansgatan 22', 'Hjärtat är en plats där man äter gott, dricker gott och har det gott! Ägarna Niclaes och Christian förädlar och utvecklar Hjärtat med varsam hand. Alltid bästa maten, bästa drinkarna och bästa musiken!', 1, '08-6401462', 'sodershjarta.se', 'Måndag-Fredag 11-01 Lördag-Söndag 16-01');`
-    );
+      const salt = await bcrypt.genSalt(10);
+      const hashedpassword = await bcrypt.hash(password, salt);
 
-    // //Review
+      let values = `("${username}", "${hashedpassword}", "${email}", "${is_admin}")`;
+      userInsertQuery += values;
+      if (i < users.length - 1) userInsertQuery += ", ";
+    }
 
-    await sequelize.query(
-      `INSERT INTO review (review_text, rating, bar_id_fk, user_id_fk)VALUES
-       ('Bra öl till bra pris!', 5, 1, 7),
-       ('Sunkigaste stället i sverige', 1, 4, 6),
-       ('This pub is a cheap place where you can buy a beer, sit and have a chat with friends.They serve bar food (not the best, not the worst) and bar snacks. There’s also not so cheap beers, wine and spirits. It’s usually crowded, so pretty hard to get a private table. The staff is ok.', 4, 2, 6);
-       `
-    );
+    userInsertQuery += ";";
+
+    await sequelize.query(userInsertQuery);
+
+    // city loop
+
+    let cityInsertQuery = `INSERT INTO city (name) VALUES `;
+
+    for (let i = 0; i < cities.length; i++) {
+      let name = cities[i].name;
+
+      let values = `("${name}")`;
+      cityInsertQuery += values;
+      if (i < cities.length - 1) cityInsertQuery += ", ";
+    }
+
+    cityInsertQuery += ";";
+
+    await sequelize.query(cityInsertQuery);
+
+    // bar loop
+
+    let barInsertQuery = `INSERT INTO bar (user_id_fk, name, address, description, city_id_fk, phone, website, hours) VALUES `;
+
+    for (let i = 0; i < bars.length; i++) {
+      let user_id_fk = bars[i].user_id_fk;
+      let name = bars[i].name;
+      let address = bars[i].address;
+      let description = bars[i].description;
+      let city_id_fk = bars[i].city;
+      let phone = bars[i].phone;
+      let website = bars[i].website;
+      let hours = bars[i].hours;
+
+      let values = `("${user_id_fk}", "${name}", "${address}", "${description}", "${city_id_fk}", "${phone}", "${website}", "${hours}")`;
+      barInsertQuery += values;
+      if (i < bars.length - 1) barInsertQuery += ", ";
+    }
+
+    barInsertQuery += ";";
+
+    await sequelize.query(barInsertQuery);
+
+    // review loop
+
+    let reviewInsertQuery = `INSERT INTO review (review_text, rating, bar_id_fk, user_id_fk) VALUES `;
+
+    for (let i = 0; i < reviews.length; i++) {
+      let review_text = reviews[i].review_text;
+      let rating = reviews[i].rating;
+      let bar_id_fk = reviews[i].bar_id_fk;
+      let user_id_fk = reviews[i].user_id_fk;
+
+      let values = `("${review_text}", "${rating}", ${bar_id_fk},  ${user_id_fk})`;
+      reviewInsertQuery += values;
+      if (i < reviews.length - 1) reviewInsertQuery += ", ";
+    }
+
+    reviewInsertQuery += ";";
+
+    await sequelize.query(reviewInsertQuery);
   } catch (error) {
     console.error(error);
   } finally {

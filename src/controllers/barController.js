@@ -1,6 +1,6 @@
 const { sequelize } = require("../database/config");
-const { bars, bar } = require("../data/bar");
-const { user } = require("../data/user");
+const { bars, bar } = require("../data/bars");
+const { user } = require("../data/users");
 const { userRoles } = require("../constants/users");
 const { UnauthorizedError, NotFoundError } = require("../utils/errors");
 const { QueryTypes } = require("sequelize");
