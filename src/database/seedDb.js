@@ -94,7 +94,7 @@ const seedBarDb = async () => {
         ('Söders Hjärta',6, 'Bellmansgatan 22', 'Hjärtat är en plats där man äter gott, dricker gott och har det gott! Ägarna Niclaes och Christian förädlar och utvecklar Hjärtat med varsam hand. Alltid bästa maten, bästa drinkarna och bästa musiken!', 1, '08-6401462', 'sodershjarta.se', 'Måndag-Fredag 11-01 Lördag-Söndag 16-01');`
     );
 
-    //Review
+    // //Review
 
     await sequelize.query(
       `INSERT INTO review (review_text, rating, bar_id_fk, user_id_fk)VALUES

@@ -79,21 +79,22 @@ exports.deleteReview = async (req, res) => {
   }
 };
 
+/******************************* test ***************************************************************** */
 // create review
 
 // http://localhost:3000/api/v1/bar/1/review
-/*
+
 exports.createReview = async (req, res) => {
   const userId = req.user.id;
   const barId = req.params.id || req.body.id; // bar-id in body obs test
   const { review_text, rating } = req.body;
-  
-  if (req.user.id !== bar.user_id_fk) {
+
+  if (req.user.role !== userRoles.ADMIN) {
     const [newReviewId] = await sequelize.query(
       `
-      INSERT INTO review (review_text, bar_id_fk, user_id_fk, rating)
-      VALUES ($review_text, $bar_id_fk, $user_id_fk, $rating);
-      `,
+    INSERT INTO review (review_text, bar_id_fk, user_id_fk, rating)
+    VALUES ($review_text, $bar_id_fk, $user_id_fk, $rating);
+    `,
       {
         bind: {
           review_text: review_text,
@@ -103,17 +104,16 @@ exports.createReview = async (req, res) => {
         },
         type: QueryTypes.INSERT,
       }
-      );
-      
-      return res
+    );
+
+    return res
       .setHeader(
         "Location",
         `${req.protocol}://${req.headers.host}/api/v1/bar/${barId}/review/${newReviewId.reviewId}`
-        )
-        .sendStatus(201);
-      }
-    };
-    */
+      )
+      .sendStatus(201);
+  }
+};
 
 exports.createNewReview = async (req, res) => {
   const { review_text, rating } = req.body; // bodyn
@@ -225,23 +225,4 @@ exports.updateReviewById = async (req, res) => {
   }
 };
 
-// get all reviews by bar_id - ta bort?
-/*
-
-exports.getReviewsByBarId = async (req, res) => {
-  const barId = req.params.barId;
-
-  const [result, metadata] = await sequelize.query(
-    `
-  SELECT review.id, review.review_text, review.bar_id_fk AS bar, review.user_id_fk AS user_ID, review.rating
-  FROM review
-  JOIN bar ON bar.id = review.bar_id_fk
-  WHERE review.bar_id_fk = $barId`,
-    {
-      bind: { barId },
-    }
-  );
-
-  if (!barId) throw new NotFoundError("That bar does not exist");
-  return res.json(result);
-};*/
+// get all reviews by bar_id
