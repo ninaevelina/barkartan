@@ -94,6 +94,11 @@ exports.updateBarById = async (req, res) => {
       type: QueryTypes.SELECT,
     }
   );
+
+  if (req.user.userId != results.user_id_fk || req.user.is_admin != 1) {
+    throw new UnauthorizedError("You are not authorized to update this bar");
+  }
+
   console.log(barId, results);
   if (!results || results.length == 0) {
     throw new NotFoundError("We could not find the bar you are looking for");
@@ -104,10 +109,6 @@ exports.updateBarById = async (req, res) => {
     "req.user.userId",
     req.user.userId
   );
-
-  if (req.user.userId !== results.user_id_fk && req.user.is_admin !== 1) {
-    throw new UnauthorizedError("You are not authorized to update this bar");
-  }
 
   await sequelize.query(
     `UPDATE bar SET name = $name, user_id_fk = $user_id_fk, address = $address,description = $description, city_id_fk = $cityId, phone = $phone, website = $website, hours = $hours WHERE id = $barId RETURNING *;`,
