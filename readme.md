@@ -25,5 +25,3 @@ Syftet med projektet är att strukturera upp användarhantering och login, hante
 ---
 
 ## SQLite databasdesign
-
-![dbDiagram] (./src/dbDesign/dbDesign.png)
