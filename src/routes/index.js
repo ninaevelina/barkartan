@@ -10,7 +10,7 @@ const userRoutes = require("./userRoutes");
 router.use("/auth", authRoutes);
 router.use("/bar", barRoutes);
 router.use("/city", cityRoutes);
-router.use("/review", reviewRoutes);
+router.use("/reviews", reviewRoutes);
 router.use("/user", userRoutes);
 
 module.exports = router;

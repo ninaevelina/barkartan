@@ -1,9 +1,10 @@
 const { sequelize } = require("../database/config");
-const { bars } = require("../data/bar");
+const { bars, bar } = require("../data/bar");
 const { user } = require("../data/user");
 const { userRoles } = require("../constants/users");
 const { UnauthorizedError, NotFoundError } = require("../utils/errors");
 const { QueryTypes } = require("sequelize");
+const jwt = require("jsonwebtoken");
 
 //get all bars
 exports.getAllBars = async (req, res) => {
@@ -43,18 +44,17 @@ exports.getBarById = async (req, res) => {
 exports.createNewBar = async (req, res) => {
   const { name, address, description, cityId, phone, website, hours } =
     req.body;
-  // const userId = req.user.id;
 
-  const user_id_fk = req.user.userId;
+  console.log("userId", req.user.userId);
 
-  console.log(req.user);
+  const userId = req.user.userId;
 
   const [newBarId] = await sequelize.query(
-    "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $user_id_fk, $address, $description, $cityId, $phone, $website, $hours)",
+    "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $userId, $address, $description, $cityId, $phone, $website, $hours)",
     {
       bind: {
         name: name,
-        user_id_fk: user_id_fk,
+        userId: userId,
         address: address,
         description: description,
         cityId: cityId,
@@ -65,6 +65,8 @@ exports.createNewBar = async (req, res) => {
       type: QueryTypes.INSERT,
     }
   );
+
+  console.log(cityId);
 
   // Request response
   return res
@@ -82,46 +84,58 @@ exports.createNewBar = async (req, res) => {
 
 exports.updateBarById = async (req, res) => {
   const barId = req.params.id;
-  // const userId = req.user.id;
+  const { name, address, description, cityId, phone, website, hours } =
+    req.body;
 
   const [results, metadata] = await sequelize.query(
     `SELECT * FROM bar WHERE id = $barId`,
     {
       bind: { barId: barId },
+      type: QueryTypes.SELECT,
     }
   );
+  console.log(barId, results);
   if (!results || results.length == 0) {
     throw new NotFoundError("We could not find the bar you are looking for");
   }
-  // if(!userId == user_id_fk)
-  if (req.user.id == bars.user_id_fk || req.user.role == userRoles.ADMIN) {
-    const { name, address, description, cityId, phone, website, hours } =
-      req.body;
-    await sequelize.query(
-      "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $user_id_fk, $address, $description, $cityId, $phone, $website, $hours)",
-      {
-        bind: {
-          name: name,
-          user_id_fk: user_id_fk,
-          address: address,
-          description: description,
-          cityId: cityId,
-          phone: phone,
-          website: website,
-          hours: hours,
-        },
-        type: QueryTypes.INSERT,
-      }
-    );
+  console.log(
+    "results.user_id_fk",
+    results.user_id_fk,
+    "req.user.userId",
+    req.user.userId
+  );
+
+  if (req.user.userId !== results.user_id_fk && req.user.is_admin !== 1) {
+    throw new UnauthorizedError("You are not authorized to update this bar");
   }
-  return res.status(201).json({
-    message: "Registration succeeded.",
+
+  await sequelize.query(
+    `UPDATE bar SET name = $name, user_id_fk = $user_id_fk, address = $address,description = $description, city_id_fk = $cityId, phone = $phone, website = $website, hours = $hours WHERE id = $barId RETURNING *;`,
+    {
+      bind: {
+        name: name,
+        user_id_fk: req.user.userId,
+        address: address,
+        description: description,
+        cityId: cityId,
+        phone: phone,
+        website: website,
+        hours: hours,
+        barId: barId,
+      },
+      type: QueryTypes.UPDATE,
+    }
+  );
+  return res.json({
+    message: "Update succeeded.",
   });
 };
 
 //delete bar
 exports.deleteBarById = async (req, res) => {
   const barId = req.params.id;
+  const userId = req.user.userId;
+
   const [results, metadata] = await sequelize.query(
     `SELECT * FROM bar WHERE id = $barId`,
     {
@@ -129,11 +143,13 @@ exports.deleteBarById = async (req, res) => {
     }
   );
 
+  console.log("barägare", bars.user_id_fk);
+
   if (!results || results.length == 0) {
     throw new NotFoundError("We could not find the bar you are looking for");
   }
 
-  if (req.user.id == bars.user_id_fk || req.user.role == userRoles.ADMIN) {
+  if (req.user.is_admin == 1 || userId == bars.user_id_fk) {
     await sequelize.query(
       `
     DELETE FROM bar WHERE id = $barId`,
@@ -144,7 +160,11 @@ exports.deleteBarById = async (req, res) => {
         type: QueryTypes.DELETE,
       }
     );
-    return res.sendStatus(204);
+    return res
+      .json({
+        message: "Deleted bar succefully.",
+      })
+      .sendStatus(204);
   } else {
     throw new UnauthorizedError("No permission to delete this bar");
   }
