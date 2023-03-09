@@ -5,7 +5,7 @@ exports.bar = [
     description:
       "Perfekt ställe för en aw med Norrlands guld och en pommestallrik efter skolan.",
     city: 1,
-    phone: 08 + "-" + 252160,
+    phone: "08-252160",
     website: "kullensbar.gastrogate.com",
     hours: "Sön-Torsdag 13-23 Fredag-Lördag 13-00",
   },
@@ -15,7 +15,7 @@ exports.bar = [
     description:
       "Oavsett om du letar efter något bekant eller något nytt så har vi allt för dig. Välkommen till Kloster, mer än bara en Pub.",
     city: 1,
-    phone: 086692306,
+    phone: "08-6692306",
     website: "pubkloster.se",
     hours:
       " Måndag 13:00 till 01:00, Tisdag 13:00 till 01:00, Onsdag 13:00 till 03:00, Torsdag 13:00 till 03:00, Fredag 13:00 till 03:00, Lördag 11:00 till 03:00, Söndag 11:00 till 01:00",
