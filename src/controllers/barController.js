@@ -9,7 +9,14 @@ const jwt = require("jsonwebtoken");
 //get all bars
 exports.getAllBars = async (req, res) => {
   try {
-    const [bars, metadata] = await sequelize.query(`SELECT * FROM bar`);
+    const limit = req.query?.limit || 10;
+    const offset = req.query?.offset || 0;
+    const [bars, metadata] = await sequelize.query(
+      `SELECT * FROM bar ORDER BY name ASC LIMIT $limit OFFSET $offset`,
+      {
+        bind: { limit: limit, offset: offset },
+      }
+    );
 
     console.log(bars);
 

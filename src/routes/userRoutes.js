@@ -5,6 +5,7 @@ const {
   getAllUsers,
   getUserById,
   deleteUserById,
+  updateUserById,
 } = require("../controllers/userControllers");
 const {
   isAuthenticated,
@@ -19,5 +20,6 @@ router.delete(
   authorizeRoles(userRoles.ADMIN),
   deleteUserById
 );
+router.put("/:id", isAuthenticated, updateUserById);
 
 module.exports = router;

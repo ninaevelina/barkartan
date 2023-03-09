@@ -19,23 +19,35 @@ exports.getAllReviews = async (req, res) => {
 
 // get review by id
 
-exports.getReviewById = async (req, res) => {
-  const reviewId = req.params.id;
+exports.getReviewsByBarId = async (req, res) => {
+  const barId = req.params.id;
+  console.log(barId);
 
   const [results] = await sequelize.query(
-    `
-    SELECT * FROM review r
-    WHERE id = $reviewId`,
+    `SELECT * FROM review WHERE bar_id_fk =  $barId;`,
     {
-      bind: { reviewId: reviewId },
+      bind: { barId: barId },
     }
   );
 
   if (!results || results.length == 0) {
-    throw new NotFoundError("We couldn't find the requested review");
+    throw new NotFoundError(
+      "We couldn't find the any reviews on the selected bar"
+    );
   }
 
   return res.json(results);
+
+  // const reviewId = req.params.id;
+
+  // const [results] = await sequelize.query(
+  //   `
+  //   SELECT * FROM review r
+  //   WHERE id = $reviewId`,
+  //   {
+  //     bind: { reviewId: reviewId },
+  //   }
+  // );
 };
 
 // delete review by id
