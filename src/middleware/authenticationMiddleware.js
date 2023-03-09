@@ -15,7 +15,7 @@ exports.isAuthenticated = async (req, res, next) => {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("payload auth", payload);
+    // console.log("payload auth", payload);
 
     req.user = {
       //@ts-ignore
@@ -25,7 +25,7 @@ exports.isAuthenticated = async (req, res, next) => {
       //@ts-ignore
       is_admin: payload.is_admin,
     };
-    console.log("userId", req.user.id, req.user.username, payload);
+    // console.log("userId", req.user.id, req.user.username, payload);
     next();
   } catch (error) {
     throw new UnauthenticatedError("Authentication invalid");

@@ -86,7 +86,6 @@ exports.updateBarById = async (req, res) => {
   const barId = req.params.id;
   const { name, address, description, cityId, phone, website, hours } =
     req.body;
-  // const userId = req.user.userId;
 
   const [results, metadata] = await sequelize.query(
     `SELECT * FROM bar WHERE id = $barId`,

@@ -15,14 +15,21 @@ exports.getUserById = async (req, res) => {
   const userId = req.params.id;
 
   // Get the user from the database (NOTE: excluding password)
+  // const [user, metadata] = await sequelize.query(
+  //   "SELECT id, username, email FROM user WHERE id = $userId",
+  //   {
+  //     bind: { userId },
+  //     type: QueryTypes.SELECT,
+  //   }
+  // );
+
   const [user, metadata] = await sequelize.query(
-    "SELECT id, username, email FROM user WHERE id = $userId",
+    "SELECT id, username, email FROM user WHERE id = userId",
     {
-      bind: { userId },
+      // bind: { userId },
       type: QueryTypes.SELECT,
     }
   );
-
   // Not found error (ok since since route is authenticated)
   if (!user) throw new NotFoundError("That user does not exist");
 
@@ -35,6 +42,7 @@ exports.deleteUserById = async (req, res) => {
   const userId = req.params.id;
 
   // Check if user is admin || user is requesting to delete themselves
+  //Ska vi ha &&???
   if (userId !== req.user?.id && req.user.is_admin === 0) {
     throw new UnauthorizedError("Unauthorized Access");
   }
