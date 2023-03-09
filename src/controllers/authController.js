@@ -57,8 +57,6 @@ exports.login = async (req, res) => {
     }
   );
 
-  console.log(user);
-
   if (!user) throw new UnauthenticatedError("Please create an account");
 
   //@ts-ignore

@@ -45,7 +45,9 @@ exports.createNewBar = async (req, res) => {
     req.body;
   // const userId = req.user.id;
 
-  const user_id_fk = req.user.id;
+  const user_id_fk = req.user.userId;
+
+  console.log(req.user);
 
   const [newBarId] = await sequelize.query(
     "INSERT INTO bar (name, user_id_fk, address,description, city_id_fk, phone, website, hours) VALUES ($name, $user_id_fk, $address, $description, $cityId, $phone, $website, $hours)",

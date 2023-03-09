@@ -60,3 +60,45 @@ exports.deleteUserById = async (req, res) => {
     message: "succesfully deleted user",
   });
 };
+
+exports.updateUserById = async (req, res) => {
+  const { username, password, email } = req.body;
+  const updateUserId = req.params.id;
+  const userId = req.user.userId;
+
+  const [userExists] = await sequelize.query(
+    `SELECT * FROM user WHERE id = $updateUserId;`,
+    {
+      bind: {
+        updateUserId: updateUserId,
+      },
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  if (req.user?.is_admin != 1 || updateUserId != userId) {
+    throw new UnauthorizedError("Unauthorized Access");
+  }
+
+  if (!userExists || userExists.length < 1) {
+    throw new BadRequestError("That user does not exist");
+  }
+
+  const [updatedUser] = await sequelize.query(
+    `UPDATE user SET username = $username, password = $password, email = $email WHERE id = $userId RETURNING *;`,
+    {
+      bind: {
+        username: username,
+        password: password,
+        email: email,
+        userId: userId,
+      },
+
+      type: QueryTypes.UPDATE,
+    }
+  );
+
+  return res.json({
+    message: "User has been updated!",
+  });
+};
