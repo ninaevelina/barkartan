@@ -39,20 +39,28 @@ exports.deleteUserById = async (req, res) => {
   }
 
   const [results, metadata] = await sequelize.query(
-    "DELETE FROM user WHERE id = $userId RETURNING *",
+    `SELECT * FROM user WHERE id = $userId`,
     {
-      bind: { userId },
+      bind: { userId: userId },
     }
   );
 
   if (!results || !results[0])
     throw new NotFoundError("That user does not exist");
 
-  await sequelize.query("DELETE FROM review WHERE user_id_fk = $userId", {
-    bind: { userId },
+  await sequelize.query(`DELETE FROM review WHERE user_id_fk = $userId`, {
+    bind: { userId: userId },
   });
 
-  return res.status(201).json({
+  await sequelize.query(`DELETE FROM bar WHERE user_id_fk = $userId`, {
+    bind: { userId: userId },
+  });
+
+  await sequelize.query(`DELETE FROM user WHERE id = $userId RETURNING *`, {
+    bind: { userId: userId },
+  });
+
+  return res.status(204).json({
     message: "succesfully deleted user",
   });
 };

@@ -88,7 +88,7 @@ exports.updateBarById = async (req, res) => {
     }
   );
 
-  if (req.user.userId != results.user_id_fk || req.user.is_admin != 1) {
+  if (req.user.userId != results.user_id_fk && req.user.is_admin != 1) {
     throw new UnauthorizedError("You are not authorized to update this bar");
   }
 
@@ -187,4 +187,5 @@ exports.deleteBarById = async (req, res) => {
   } else {
     throw new UnauthorizedError("No permission to delete this bar");
   }
-};*/
+};
+*/
