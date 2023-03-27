@@ -1,5 +1,9 @@
 const { userRoles } = require("../constants/users");
-const { NotFoundError, UnauthorizedError } = require("../utils/errors");
+const {
+  NotFoundError,
+  UnauthorizedError,
+  BadRequestError,
+} = require("../utils/errors");
 const { sequelize } = require("../database/config");
 const { QueryTypes } = require("sequelize");
 const bcrypt = require("bcrypt");
