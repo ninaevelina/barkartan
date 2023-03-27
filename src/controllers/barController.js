@@ -153,3 +153,38 @@ exports.deleteBarById = async (req, res) => {
     throw new UnauthorizedError("No permission to delete this bar");
   }
 };
+/*
+exports.deleteBarById = async (req, res) => {
+  const barId = req.params.id;
+  const userId = req.user.userId;
+
+  const [results, metadata] = await sequelize.query(
+    `SELECT * FROM bar WHERE id = $barId`,
+    {
+      bind: { barId: barId },
+    }
+  );
+
+  if (!results || results.length == 0) {
+    throw new NotFoundError("We could not find the bar you are looking for");
+  }
+
+  if (req.user.is_admin == 1 || userId == bar.results[0].user_id_fk) {
+    await sequelize.query(`DELETE FROM review WHERE bar_id_fk = $barId`, {
+      bind: { barId: barId },
+    });
+
+    await sequelize.query(`DELETE FROM bar WHERE id = $barId`, {
+      bind: { barId: barId },
+    });
+
+    return res
+      .json({
+        message: "Deleted bar succefully.",
+      })
+
+      .sendStatus(204);
+  } else {
+    throw new UnauthorizedError("No permission to delete this bar");
+  }
+};*/
