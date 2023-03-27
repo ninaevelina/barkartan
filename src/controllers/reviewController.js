@@ -50,11 +50,7 @@ exports.deleteReview = async (req, res) => {
   const reviewId = req.params.reviewId;
   const userId = req.user.userId;
   const [review, metadata] = await sequelize.query(
-    `
-  
-  SELECT * FROM review r
-  WHERE id = $reviewId`,
-
+    `SELECT * FROM review r WHERE id = $reviewId`,
     {
       bind: { reviewId: reviewId },
       type: QueryTypes.SELECT,
@@ -176,3 +172,31 @@ exports.updateReviewById = async (req, res) => {
     );
   }
 };
+/*
+exports.deleteReview = async (req, res) => {
+  const reviewId = req.params.reviewId;
+  const userId = req.user.userId;
+  const [review, metadata] = await sequelize.query(
+    `SELECT * FROM review r WHERE id = $reviewId`,
+    {
+      bind: { reviewId: reviewId },
+      type: QueryTypes.SELECT,
+    }
+  );
+
+  if (!review) {
+    throw new NotFoundError("Review not found");
+  }
+
+  if (userId == review.user_id_fk || req.user.is_admin == 1) {
+    await sequelize.query(`DELETE FROM review r WHERE review.id = $reviewId`, {
+      bind: {
+        reviewId: reviewId,
+      },
+      type: QueryTypes.DELETE,
+    });
+    return res.sendStatus(204);
+  } else {
+    throw new UnauthorizedError("You are not authorized to delete this review");
+  }
+};*/
