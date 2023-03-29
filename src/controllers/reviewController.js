@@ -1,5 +1,5 @@
 const { sequelize } = require("../database/config");
-const { userRoles } = require("../constants/users");
+//const { userRoles } = require("../constants/users");
 const { QueryTypes } = require("sequelize");
 const {
   UnauthorizedError,
@@ -45,7 +45,7 @@ exports.getReviewsByBarId = async (req, res) => {
 
   return res.json(results);
 };
-
+/*
 exports.deleteReview = async (req, res) => {
   const reviewId = req.params.reviewId;
   const userId = req.user.userId;
@@ -77,7 +77,7 @@ exports.deleteReview = async (req, res) => {
   } else {
     throw new UnauthorizedError("You are not authorized to delete this review");
   }
-};
+};*/
 
 exports.createNewReview = async (req, res) => {
   const { review_text, rating } = req.body;
@@ -121,7 +121,7 @@ exports.createNewReview = async (req, res) => {
         message: "Review created!",
       });
   } else {
-    throw new BadRequestError("opsi");
+    throw new BadRequestError("Bad request.");
   }
 };
 
@@ -130,7 +130,7 @@ exports.updateReviewById = async (req, res) => {
 
   const reviewId = req.params.reviewId;
   const userId = req.user.userId;
-  const userRole = req.user.role;
+  // const userRole = req.user.role;
 
   if (!review_text || !rating) {
     throw new BadRequestError("You have to enter values for each field.");
@@ -149,7 +149,7 @@ exports.updateReviewById = async (req, res) => {
 
   if (!review) throw new UnauthorizedError("Review does not exist");
 
-  if (userId == review[0].user_id_fk || userRole == userRoles.ADMIN) {
+  if (userId == review[0].user_id_fk || req.user.is_admin == 1) {
     const [updatedReview] = await sequelize.query(
       `
     UPDATE review SET review_text = $review_text, rating = $rating
@@ -172,12 +172,12 @@ exports.updateReviewById = async (req, res) => {
     );
   }
 };
-/*
+
 exports.deleteReview = async (req, res) => {
   const reviewId = req.params.reviewId;
   const userId = req.user.userId;
   const [review, metadata] = await sequelize.query(
-    `SELECT * FROM review r WHERE id = $reviewId`,
+    `SELECT * FROM review WHERE id = $reviewId`,
     {
       bind: { reviewId: reviewId },
       type: QueryTypes.SELECT,
@@ -189,7 +189,7 @@ exports.deleteReview = async (req, res) => {
   }
 
   if (userId == review.user_id_fk || req.user.is_admin == 1) {
-    await sequelize.query(`DELETE FROM review r WHERE review.id = $reviewId`, {
+    await sequelize.query(`DELETE FROM review WHERE review.id = $reviewId`, {
       bind: {
         reviewId: reviewId,
       },
@@ -199,4 +199,4 @@ exports.deleteReview = async (req, res) => {
   } else {
     throw new UnauthorizedError("You are not authorized to delete this review");
   }
-};*/
+};

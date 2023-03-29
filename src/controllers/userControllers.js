@@ -1,4 +1,4 @@
-const { userRoles } = require("../constants/users");
+// const { userRoles } = require("../constants/users");
 const {
   NotFoundError,
   UnauthorizedError,
@@ -34,7 +34,7 @@ exports.getUserById = async (req, res) => {
 exports.deleteUserById = async (req, res) => {
   const userId = req.params.id;
 
-  if (userId !== req.user?.id && req.user.is_admin === 0) {
+  if (userId != req.user?.userId && req.user.is_admin != 1) {
     throw new UnauthorizedError("Unauthorized Access");
   }
 

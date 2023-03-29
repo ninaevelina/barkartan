@@ -1,7 +1,7 @@
 const { sequelize } = require("../database/config");
 const { bars, bar } = require("../data/bars");
 const { user } = require("../data/users");
-const { userRoles } = require("../constants/users");
+//const { userRoles } = require("../constants/users");
 const { UnauthorizedError, NotFoundError } = require("../utils/errors");
 const { QueryTypes } = require("sequelize");
 const jwt = require("jsonwebtoken");
@@ -133,43 +133,7 @@ exports.deleteBarById = async (req, res) => {
     throw new NotFoundError("We could not find the bar you are looking for");
   }
 
-  if (req.user.is_admin == 1 || userId == bars.user_id_fk) {
-    await sequelize.query(
-      `
-    DELETE FROM bar WHERE id = $barId`,
-      {
-        bind: {
-          barId: barId,
-        },
-        type: QueryTypes.DELETE,
-      }
-    );
-    return res
-      .json({
-        message: "Deleted bar succefully.",
-      })
-      .sendStatus(204);
-  } else {
-    throw new UnauthorizedError("No permission to delete this bar");
-  }
-};
-/*
-exports.deleteBarById = async (req, res) => {
-  const barId = req.params.id;
-  const userId = req.user.userId;
-
-  const [results, metadata] = await sequelize.query(
-    `SELECT * FROM bar WHERE id = $barId`,
-    {
-      bind: { barId: barId },
-    }
-  );
-
-  if (!results || results.length == 0) {
-    throw new NotFoundError("We could not find the bar you are looking for");
-  }
-
-  if (req.user.is_admin == 1 || userId == bar.results[0].user_id_fk) {
+  if (req.user.is_admin == 1 || results[0].user_id_fk == userId) {
     await sequelize.query(`DELETE FROM review WHERE bar_id_fk = $barId`, {
       bind: { barId: barId },
     });
@@ -178,14 +142,8 @@ exports.deleteBarById = async (req, res) => {
       bind: { barId: barId },
     });
 
-    return res
-      .json({
-        message: "Deleted bar succefully.",
-      })
-
-      .sendStatus(204);
+    return res.sendStatus(204);
   } else {
     throw new UnauthorizedError("No permission to delete this bar");
   }
 };
-*/

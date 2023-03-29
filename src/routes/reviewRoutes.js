@@ -13,7 +13,7 @@ const { reviewSchema } = require("../middleware/validation/validationSchemas");
 
 router.get("/", getAllReviews);
 router.get("/:id", getReviewsByBarId);
-router.delete("/:id", isAuthenticated, deleteReview);
+router.delete("/:reviewId", isAuthenticated, deleteReview);
 router.post("/:barId", isAuthenticated, createNewReview);
 router.put(
   "/:reviewId",

@@ -29,11 +29,24 @@ exports.isAuthenticated = async (req, res, next) => {
     throw new UnauthenticatedError("Authentication invalid");
   }
 };
-exports.authorizeRoles = (...roles) => {
+/*
+exports.authorizeRoles = () => {
   return (req, res, next) => {
     if (req.user.is_admin !== 1) {
+      console.log(req.user);
       throw new UnauthorizedError("Unauthorized Access");
     }
     next();
   };
 };
+*/
+/*
+exports.authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user?.is_admin || !roles.includes(req.user.role)) {
+      throw new UnauthorizedError("Unauthorized Access");
+    }
+    next();
+  };
+};
+*/
